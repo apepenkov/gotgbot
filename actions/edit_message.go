@@ -7,15 +7,16 @@ import (
 )
 
 type EditMessageAction struct {
-	chatID     int64
-	messageID  int
-	text       *string
-	markup     *tgbotapi.InlineKeyboardMarkup
-	asMarkdown bool
-	asHTML     bool
-	wasFile    bool
-	entities   []tgbotapi.MessageEntity
-	rolledBack bool
+	chatID          int64
+	messageID       int
+	inlineMessageID string
+	text            *string
+	markup          *tgbotapi.InlineKeyboardMarkup
+	asMarkdown      bool
+	asHTML          bool
+	wasFile         bool
+	entities        []tgbotapi.MessageEntity
+	rolledBack      bool
 
 	// prevMessage, when set, would let us rollback to the previous message
 	prevMessage *tgbotapi.Message
@@ -37,6 +38,11 @@ func (a *EditMessageAction) WithMessage(message *tgbotapi.Message) *EditMessageA
 	if message.Document != nil || message.Photo != nil || message.Video != nil || message.Audio != nil {
 		a.wasFile = true
 	}
+	return a
+}
+
+func (a *EditMessageAction) WithInlineMessageID(inlineMessageID string) *EditMessageAction {
+	a.inlineMessageID = inlineMessageID
 	return a
 }
 

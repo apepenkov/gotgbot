@@ -1,6 +1,7 @@
 package events
 
 import (
+	"github.com/apepenkov/gotgbot/actions"
 	"github.com/apepenkov/gotgbot/cb_data"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
@@ -31,6 +32,13 @@ func (c *CallbackEvent) AnswerText(text string) error {
 
 func (c *CallbackEvent) AnswerAlert(text string) error {
 	return c.answer(tgbotapi.NewCallbackWithAlert(c.QueryId, text))
+}
+
+func (c *CallbackEvent) EditAction() *actions.EditMessageAction {
+	if c.Update.Message != nil {
+		return actions.NewEditMessageAction().WithMessage(c.Update.Message)
+	}
+	return actions.NewEditMessageAction().WithInlineMessageID(c.Update.CallbackQuery.InlineMessageID)
 }
 
 func (c *CallbackEvent) ImplementsEvent() {}
