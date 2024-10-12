@@ -103,7 +103,7 @@ func (a *EditMessageAction) Execute(api *tgbotapi.BotAPI) (interface{}, error) {
 	}
 
 	if a.wasFile {
-		chattable = tgbotapi.EditMessageCaptionConfig{
+		chattable = &tgbotapi.EditMessageCaptionConfig{
 			BaseEdit:  baseEdit,
 			ParseMode: a.parseMode(),
 		}
@@ -114,7 +114,7 @@ func (a *EditMessageAction) Execute(api *tgbotapi.BotAPI) (interface{}, error) {
 			chattable.(*tgbotapi.EditMessageCaptionConfig).CaptionEntities = a.entities
 		}
 	} else {
-		chattable = tgbotapi.EditMessageTextConfig{
+		chattable = &tgbotapi.EditMessageTextConfig{
 			BaseEdit:  baseEdit,
 			ParseMode: a.parseMode(),
 		}
