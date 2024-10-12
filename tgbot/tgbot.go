@@ -125,3 +125,27 @@ func (b *TgBot) RunLongPooling() {
 func (b *TgBot) Stop() {
 	close(b.cancelUpdateChan)
 }
+
+func (b *TgBot) RegisterCommandHandler(handler handlers.CommandHandler) {
+	b.CommandHandlers = append(b.CommandHandlers, handler)
+}
+
+func (b *TgBot) RegisterMessageHandler(handler handlers.NewMessageHandler) {
+	b.MessageHandlers = append(b.MessageHandlers, handler)
+}
+
+func (b *TgBot) RegisterCallbackHandler(handler handlers.CallbackHandler) {
+	b.CallbackHandlers = append(b.CallbackHandlers, handler)
+}
+
+func (b *TgBot) SetUnknownCommandFunc(f handlers.CommandFunc) {
+	b.UnknownCommandFunc = f
+}
+
+func (b *TgBot) SetUnknownMessageFunc(f handlers.NewMessageFunc) {
+	b.UnknownMessageFunc = f
+}
+
+func (b *TgBot) SetUnknownCallbackFunc(f handlers.CallbackFunc) {
+	b.UnknownCallbackFunc = f
+}
