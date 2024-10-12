@@ -24,6 +24,9 @@ func (e *CommonEvent) AddAction(action actions.Action) {
 func (e *CommonEvent) ExecuteAction(action actions.Action) error {
 	_, err := action.Execute(e.Bot)
 	e.AddAction(action)
+	if err == nil {
+		return nil
+	}
 	return fmt.Errorf("failed to execute action: %w", err)
 }
 
