@@ -23,6 +23,8 @@ type TgBot struct {
 	CallbackHandlers    []handlers.CallbackHandler
 	UnknownCallbackFunc handlers.CallbackFunc
 
+	DefAnErrorOccurredFunc func(event events.Event, err error) error
+
 	updateGoroutines int
 	cancelUpdateChan chan struct{}
 }
@@ -50,15 +52,21 @@ func (b *TgBot) updateGoroutine(updatesChan tgbotapi.UpdatesChannel) {
 		case <-b.cancelUpdateChan:
 			return
 		case update := <-updatesChan:
-			err := b.innerHandleUpdate(&update)
+			event, err := b.innerHandleUpdate(&update)
 			if err != nil {
+				if b.DefAnErrorOccurredFunc != nil {
+					_ = b.DefAnErrorOccurredFunc(event, err)
+				}
 				log.Printf("Error handling update: %v", err)
 			}
 		}
 	}
 }
 
-func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (err error) {
+func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (event events.Event, err error) {
+	ctx := context.Background()
+	ctx = context.WithValue(ctx, "bot", b.Bot)
+
 	defer func() {
 		if r := recover(); r != nil {
 			switch x := r.(type) {
@@ -72,9 +80,6 @@ func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (err error) {
 		}
 	}()
 
-	ctx := context.Background()
-	ctx = context.WithValue(ctx, "bot", b.Bot)
-
 	cmn := events.NewCommonEvent(b.Bot, update, ctx)
 
 	if update.Message != nil {
@@ -83,40 +88,43 @@ func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (err error) {
 			state = b.StateGetter.GetState(cmn.ChatId)
 		}
 		newMsgEvent := events.NewNewMessageEvent(cmn, state)
+		event = newMsgEvent
 
 		if len(newMsgEvent.Text) > 0 && newMsgEvent.Text[0] == '/' {
-			event := events.NewCommandEvent(*newMsgEvent)
+			commandEvent := events.NewCommandEvent(*newMsgEvent)
+			event = commandEvent
 
 			for _, handler := range b.CommandHandlers {
-				if handler.Matches(event) {
-					return handler.Call(event)
+				if handler.Matches(commandEvent) {
+					return event, handler.Call(commandEvent)
 				}
 			}
 			if b.UnknownCommandFunc != nil {
-				return b.UnknownCommandFunc(event, event.Context)
+				return event, b.UnknownCommandFunc(commandEvent, commandEvent.Context)
 			}
-			return nil
+			return event, nil
 		}
 
 		for _, handler := range b.MessageHandlers {
 			if handler.Matches(newMsgEvent) {
-				return handler.Call(newMsgEvent)
+				return event, handler.Call(newMsgEvent)
 			}
 		}
 	} else if update.CallbackQuery != nil {
-		event := events.NewCallbackEvent(cmn)
+		callbackEvent := events.NewCallbackEvent(cmn)
+		event = callbackEvent
 		for _, handler := range b.CallbackHandlers {
-			if handler.Matches(event) {
-				return handler.Call(event)
+			if handler.Matches(callbackEvent) {
+				return event, handler.Call(callbackEvent)
 			}
 		}
 		if b.UnknownCallbackFunc != nil {
-			return b.UnknownCallbackFunc(event, event.Context)
+			return event, b.UnknownCallbackFunc(callbackEvent, callbackEvent.Context)
 		}
-		return nil
+		return
 	}
 
-	return nil
+	return
 }
 
 func (b *TgBot) RunLongPooling() {
