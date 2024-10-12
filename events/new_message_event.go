@@ -24,6 +24,13 @@ func (e *NewMessageEvent) SenderId() (int64, bool) {
 	return e.senderId, e.senderOk
 }
 
+func (e *NewMessageEvent) MustSenderId() int64 {
+	if e.senderOk {
+		return e.senderId
+	}
+	panic("senderId is not set")
+}
+
 func (e *NewMessageEvent) ImplementsEvent() {}
 
 func (e *NewMessageEvent) ReplyAction() *actions.SendMessageAction {
