@@ -49,6 +49,9 @@ func NewNewMessageEvent(cmn CommonEvent, initialState string) *NewMessageEvent {
 		}
 		e.Text = cmn.Update.Message.Text
 		e.Message = cmn.Update.Message
+		if cmn.Update.Message.From != nil {
+			e.SetSenderId(cmn.Update.Message.From.ID)
+		}
 	}
 
 	return e
