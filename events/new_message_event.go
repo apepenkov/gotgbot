@@ -7,11 +7,12 @@ import (
 
 type NewMessageEvent struct {
 	CommonEvent
-	senderId  int64
-	senderOk  bool
-	Text      string
-	Message   *tgbotapi.Message
-	IsPrivate bool
+	InitialState string
+	senderId     int64
+	senderOk     bool
+	Text         string
+	Message      *tgbotapi.Message
+	IsPrivate    bool
 }
 
 func (e *NewMessageEvent) SetSenderId(senderId int64) {
@@ -27,4 +28,21 @@ func (e *NewMessageEvent) ImplementsEvent() {}
 
 func (e *NewMessageEvent) ReplyAction() *actions.SendMessageAction {
 	return actions.NewSendMessageAction().WithChatID(e.ChatId).WithReply(e.Message.MessageID)
+}
+
+func NewNewMessageEvent(cmn CommonEvent, initialState string) *NewMessageEvent {
+	e := &NewMessageEvent{
+		CommonEvent:  cmn,
+		InitialState: initialState,
+	}
+	if cmn.Update.Message != nil {
+		if cmn.Update.Message.Chat != nil {
+			e.ChatId = cmn.Update.Message.Chat.ID
+			e.IsPrivate = cmn.Update.Message.Chat.IsPrivate()
+		}
+		e.Text = cmn.Update.Message.Text
+		e.Message = cmn.Update.Message
+	}
+
+	return e
 }

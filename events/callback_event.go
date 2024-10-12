@@ -34,3 +34,18 @@ func (c *CallbackEvent) AnswerAlert(text string) error {
 }
 
 func (c *CallbackEvent) ImplementsEvent() {}
+
+func NewCallbackEvent(event CommonEvent) *CallbackEvent {
+	cbd, args := cb_data.GetCallbackData(event.Update.CallbackQuery.Data)
+
+	e := &CallbackEvent{
+		CommonEvent: event,
+		CbData:      cbd,
+		Params:      args,
+		QueryId:     event.Update.CallbackQuery.ID,
+		MessageId:   event.Update.CallbackQuery.Message.MessageID,
+		Callback:    event.Update.CallbackQuery,
+	}
+
+	return e
+}

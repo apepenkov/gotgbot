@@ -65,9 +65,17 @@ func (e *CommonEvent) RespondAction() *actions.SendMessageAction {
 }
 
 func NewCommonEvent(bot *tgbotapi.BotAPI, update *tgbotapi.Update, ctx context.Context) CommonEvent {
+	chatId := int64(0)
+	if update.Message != nil && update.Message.Chat != nil {
+		chatId = update.Message.Chat.ID
+	} else if update.CallbackQuery != nil && update.CallbackQuery.Message != nil && update.CallbackQuery.Message.Chat != nil {
+		chatId = update.CallbackQuery.Message.Chat.ID
+	}
 	return CommonEvent{
 		Bot:     bot,
 		Update:  update,
+		ChatId:  chatId,
+		actions: make([]actions.Action, 0),
 		Context: ctx,
 	}
 }
