@@ -2,6 +2,8 @@ package tgbot
 
 import (
 	"context"
+	"errors"
+	"fmt"
 	"github.com/apepenkov/gotgbot/events"
 	"github.com/apepenkov/gotgbot/handlers"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
@@ -59,7 +61,14 @@ func (b *TgBot) updateGoroutine(updatesChan tgbotapi.UpdatesChannel) {
 func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (err error) {
 	defer func() {
 		if r := recover(); r != nil {
-			err = r.(error)
+			switch x := r.(type) {
+			case string:
+				err = errors.New(x)
+			case error:
+				err = x
+			default:
+				err = fmt.Errorf("%v", x)
+			}
 		}
 	}()
 
