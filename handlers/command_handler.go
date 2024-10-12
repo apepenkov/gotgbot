@@ -22,6 +22,10 @@ func (h *CommandHandler) Matches(e events.Event) bool {
 		return false
 	}
 
+	if len(h.Command) > 1 && h.Command[0] == '/' {
+		h.Command = h.Command[1:]
+	}
+
 	if h.Command != event.Command {
 		return false
 	}

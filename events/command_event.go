@@ -24,6 +24,8 @@ func NewCommandEvent(event NewMessageEvent) *CommandEvent {
 		command = parts[0]
 	}
 
+	command = strings.TrimPrefix(command, "/")
+
 	if len(parts) > 1 {
 		arguments = parts[1:]
 	} else {
