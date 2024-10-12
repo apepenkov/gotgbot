@@ -44,6 +44,8 @@ func (e *CommonEvent) ExecuteActions() error {
 }
 
 func (e *CommonEvent) RollbackActions() error {
+	errorsOccurred := make([]error, 0)
+
 	for i := len(e.actions) - 1; i >= 0; i-- {
 		action := e.actions[i]
 		if !action.IsExecuted() {
@@ -57,8 +59,11 @@ func (e *CommonEvent) RollbackActions() error {
 			if errors.Is(err, actions.CantRollBackError{}) {
 				continue
 			}
-			return fmt.Errorf("failed to rollback action: %w", err)
+			errorsOccurred = append(errorsOccurred, err)
 		}
+	}
+	if len(errorsOccurred) > 0 {
+		return errors.Join(errorsOccurred...)
 	}
 	return nil
 }

@@ -167,7 +167,7 @@ func (a *SendMessageAction) RollBack(api *tgbotapi.BotAPI) error {
 	if a.sentMessage == nil {
 		return nil
 	}
-	_, err := api.Send(tgbotapi.NewDeleteMessage(a.chatID, a.sentMessage.MessageID))
+	_, err := api.Request(tgbotapi.NewDeleteMessage(a.chatID, a.sentMessage.MessageID))
 	a.rolledBack = true
 	if err != nil {
 		return fmt.Errorf("failed to delete message: %w", err)
