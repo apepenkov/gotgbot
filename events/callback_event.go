@@ -37,8 +37,12 @@ func (c *CallbackEvent) AnswerAlert(text string) error {
 func (c *CallbackEvent) EditAction() *actions.EditMessageAction {
 	if c.Update.Message != nil {
 		return actions.NewEditMessageAction().WithMessage(c.Update.Message)
+	} else if c.Update.CallbackQuery != nil && c.Update.CallbackQuery.Message != nil {
+		return actions.NewEditMessageAction().WithMessage(c.Update.CallbackQuery.Message)
+	} else if c.Update.CallbackQuery != nil && c.Update.CallbackQuery.InlineMessageID != "" {
+		return actions.NewEditMessageAction().WithInlineMessageID(c.Update.CallbackQuery.InlineMessageID)
 	}
-	return actions.NewEditMessageAction().WithInlineMessageID(c.Update.CallbackQuery.InlineMessageID)
+	return actions.NewEditMessageAction()
 }
 
 func (c *CallbackEvent) ImplementsEvent() {}

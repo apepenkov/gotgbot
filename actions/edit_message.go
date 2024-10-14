@@ -85,7 +85,7 @@ func (a *EditMessageAction) Execute(api *tgbotapi.BotAPI) (interface{}, error) {
 	if a.text == nil && a.markup == nil {
 		return nil, errors.New("no text or markup to edit")
 	}
-	if a.chatID == 0 {
+	if a.chatID == 0 && a.inlineMessageID == "" {
 		return nil, errors.New("no chat id")
 	}
 	if a.messageID == 0 {
@@ -97,9 +97,10 @@ func (a *EditMessageAction) Execute(api *tgbotapi.BotAPI) (interface{}, error) {
 	var chattable tgbotapi.Chattable
 
 	baseEdit := tgbotapi.BaseEdit{
-		ChatID:      a.chatID,
-		MessageID:   a.messageID,
-		ReplyMarkup: a.markup,
+		ChatID:          a.chatID,
+		MessageID:       a.messageID,
+		InlineMessageID: a.inlineMessageID,
+		ReplyMarkup:     a.markup,
 	}
 
 	if a.wasFile {
