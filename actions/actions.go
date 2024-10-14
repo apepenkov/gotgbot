@@ -23,7 +23,7 @@ func (e AlreadyRollBackedError) Error() string {
 
 func IsMarkup(markup interface{}) bool {
 	switch markup.(type) {
-	case tgbotapi.InlineKeyboardMarkup, tgbotapi.ReplyKeyboardMarkup, tgbotapi.ReplyKeyboardRemove:
+	case tgbotapi.InlineKeyboardMarkup, tgbotapi.ReplyKeyboardMarkup, tgbotapi.ReplyKeyboardRemove, *tgbotapi.InlineKeyboardMarkup, *tgbotapi.ReplyKeyboardMarkup, *tgbotapi.ReplyKeyboardRemove:
 		return true
 	default:
 		return false
