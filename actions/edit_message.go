@@ -103,27 +103,33 @@ func (a *EditMessageAction) Execute(api *tgbotapi.BotAPI) (interface{}, error) {
 		ReplyMarkup:     a.markup,
 	}
 
-	if a.wasFile {
-		chattable = &tgbotapi.EditMessageCaptionConfig{
-			BaseEdit:  baseEdit,
-			ParseMode: a.parseMode(),
-		}
-		if a.text != nil {
-			chattable.(*tgbotapi.EditMessageCaptionConfig).Caption = *a.text
-		}
-		if len(a.entities) > 0 {
-			chattable.(*tgbotapi.EditMessageCaptionConfig).CaptionEntities = a.entities
+	if a.text == nil && a.markup != nil {
+		chattable = &tgbotapi.EditMessageReplyMarkupConfig{
+			BaseEdit: baseEdit,
 		}
 	} else {
-		chattable = &tgbotapi.EditMessageTextConfig{
-			BaseEdit:  baseEdit,
-			ParseMode: a.parseMode(),
-		}
-		if a.text != nil {
-			chattable.(*tgbotapi.EditMessageTextConfig).Text = *a.text
-		}
-		if len(a.entities) > 0 {
-			chattable.(*tgbotapi.EditMessageTextConfig).Entities = a.entities
+		if a.wasFile {
+			chattable = &tgbotapi.EditMessageCaptionConfig{
+				BaseEdit:  baseEdit,
+				ParseMode: a.parseMode(),
+			}
+			if a.text != nil {
+				chattable.(*tgbotapi.EditMessageCaptionConfig).Caption = *a.text
+			}
+			if len(a.entities) > 0 {
+				chattable.(*tgbotapi.EditMessageCaptionConfig).CaptionEntities = a.entities
+			}
+		} else {
+			chattable = &tgbotapi.EditMessageTextConfig{
+				BaseEdit:  baseEdit,
+				ParseMode: a.parseMode(),
+			}
+			if a.text != nil {
+				chattable.(*tgbotapi.EditMessageTextConfig).Text = *a.text
+			}
+			if len(a.entities) > 0 {
+				chattable.(*tgbotapi.EditMessageTextConfig).Entities = a.entities
+			}
 		}
 	}
 

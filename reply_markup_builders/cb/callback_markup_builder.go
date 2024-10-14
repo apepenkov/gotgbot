@@ -27,6 +27,10 @@ func Double(text1, data1, text2, data2 string) tgbotapi.InlineKeyboardMarkup {
 	return M(R(B(text1, data1), B(text2, data2)))
 }
 
+var NONE = tgbotapi.InlineKeyboardMarkup{
+	InlineKeyboard: [][]tgbotapi.InlineKeyboardButton{},
+}
+
 func example() {
 	// example of usage
 
