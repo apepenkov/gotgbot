@@ -32,6 +32,9 @@ func (a *EditMessageAction) WithChatAndMessageId(chatID int64, messageID int, is
 }
 
 func (a *EditMessageAction) WithMessage(message *tgbotapi.Message) *EditMessageAction {
+	if message == nil {
+		return a
+	}
 	a.chatID = message.Chat.ID
 	a.messageID = message.MessageID
 	a.prevMessage = message

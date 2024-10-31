@@ -183,3 +183,7 @@ func (a *SendMessageAction) IsExecuted() bool {
 func NewSendMessageAction() *SendMessageAction {
 	return &SendMessageAction{}
 }
+
+func (a *SendMessageAction) EditSentAction() *EditMessageAction {
+	return NewEditMessageAction().WithMessage(a.sentMessage)
+}

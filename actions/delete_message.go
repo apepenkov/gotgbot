@@ -20,6 +20,15 @@ func (a *DeleteMessageAction) WithChatAndMessageId(chatID int64, messageID int) 
 	return a
 }
 
+func (a *DeleteMessageAction) WithMessage(message *tgbotapi.Message) *DeleteMessageAction {
+	if message == nil {
+		return a
+	}
+	a.chatID = message.Chat.ID
+	a.messageID = message.MessageID
+	return a
+}
+
 func (a *DeleteMessageAction) Execute(api *tgbotapi.BotAPI) (interface{}, error) {
 	if a.chatID == 0 {
 		return nil, errors.New("no chat id")
