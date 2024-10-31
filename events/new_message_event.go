@@ -34,7 +34,7 @@ func (e *NewMessageEvent) MustSenderId() int64 {
 func (e *NewMessageEvent) ImplementsEvent() {}
 
 func (e *NewMessageEvent) ReplyAction() *actions.SendMessageAction {
-	return actions.NewSendMessageAction().WithChatID(e.ChatId).WithReply(e.Message.MessageID)
+	return actions.NewSendMessage().WithChatID(e.ChatId).WithReply(e.Message.MessageID)
 }
 
 func NewNewMessageEvent(cmn CommonEvent, initialState string) *NewMessageEvent {

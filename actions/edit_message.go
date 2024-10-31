@@ -177,6 +177,6 @@ func (a *EditMessageAction) IsExecuted() bool {
 	return a.editedMessage != nil
 }
 
-func NewEditMessageAction() *EditMessageAction {
+func NewEditMessage() *EditMessageAction {
 	return &EditMessageAction{}
 }

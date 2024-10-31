@@ -54,6 +54,6 @@ func (a *DeleteMessageAction) IsExecuted() bool {
 	return a.executed
 }
 
-func NewDeleteMessageAction() *DeleteMessageAction {
+func NewDeleteMessage() *DeleteMessageAction {
 	return &DeleteMessageAction{}
 }

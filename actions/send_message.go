@@ -180,10 +180,10 @@ func (a *SendMessageAction) IsExecuted() bool {
 	return a.sentMessage != nil
 }
 
-func NewSendMessageAction() *SendMessageAction {
+func NewSendMessage() *SendMessageAction {
 	return &SendMessageAction{}
 }
 
-func (a *SendMessageAction) EditSentAction() *EditMessageAction {
-	return NewEditMessageAction().WithMessage(a.sentMessage)
+func (a *SendMessageAction) EditSent() *EditMessageAction {
+	return NewEditMessage().WithMessage(a.sentMessage)
 }

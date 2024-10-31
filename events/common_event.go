@@ -69,7 +69,7 @@ func (e *CommonEvent) RollbackActions() error {
 }
 
 func (e *CommonEvent) RespondAction() *actions.SendMessageAction {
-	return actions.NewSendMessageAction().WithChatID(e.ChatId)
+	return actions.NewSendMessage().WithChatID(e.ChatId)
 }
 
 func NewCommonEvent(bot *tgbotapi.BotAPI, update *tgbotapi.Update, ctx context.Context) CommonEvent {
