@@ -33,8 +33,12 @@ func (e *NewMessageEvent) MustSenderId() int64 {
 
 func (e *NewMessageEvent) ImplementsEvent() {}
 
-func (e *NewMessageEvent) ReplyAction() *actions.SendMessageAction {
-	return actions.NewSendMessage().WithChatID(e.ChatId).WithReply(e.Message.MessageID)
+func (e *NewMessageEvent) Respond() *actions.SendMessageAction {
+	return actions.NewSendMessage().WithChatID(e.ChatId)
+}
+
+func (e *NewMessageEvent) Reply() *actions.SendMessageAction {
+	return e.Respond().WithReply(e.Message.MessageID)
 }
 
 func NewNewMessageEvent(cmn CommonEvent, initialState string) *NewMessageEvent {

@@ -34,7 +34,7 @@ func (c *CallbackEvent) AnswerAlert(text string) error {
 	return c.answer(tgbotapi.NewCallbackWithAlert(c.QueryId, text))
 }
 
-func (c *CallbackEvent) EditAction() *actions.EditMessageAction {
+func (c *CallbackEvent) Edit() *actions.EditMessageAction {
 	if c.Update.Message != nil {
 		return actions.NewEditMessage().WithMessage(c.Update.Message)
 	} else if c.Update.CallbackQuery != nil && c.Update.CallbackQuery.Message != nil {
@@ -43,6 +43,14 @@ func (c *CallbackEvent) EditAction() *actions.EditMessageAction {
 		return actions.NewEditMessage().WithInlineMessageID(c.Update.CallbackQuery.InlineMessageID)
 	}
 	return actions.NewEditMessage()
+}
+
+func (c *CallbackEvent) Respond() *actions.SendMessageAction {
+	return actions.NewSendMessage().WithChatID(c.ChatId)
+}
+
+func (c *CallbackEvent) Reply() *actions.SendMessageAction {
+	return c.Respond().WithReply(c.MessageId)
 }
 
 func (c *CallbackEvent) ImplementsEvent() {}
