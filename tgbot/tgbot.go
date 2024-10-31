@@ -106,7 +106,11 @@ func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (event events.Event, 
 
 			for _, handler := range b.CommandHandlers {
 				if handler.Matches(commandEvent) {
-					return event, handler.Call(commandEvent)
+					callResult := handler.Call(commandEvent)
+					if callResult != nil && errors.Is(callResult, events.PropagateNext) {
+						continue
+					}
+					return event, callResult
 				}
 			}
 			if b.UnknownCommandFunc != nil {
@@ -117,7 +121,11 @@ func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (event events.Event, 
 
 		for _, handler := range b.MessageHandlers {
 			if handler.Matches(newMsgEvent) {
-				return event, handler.Call(newMsgEvent)
+				callResult := handler.Call(newMsgEvent)
+				if callResult != nil && errors.Is(callResult, events.PropagateNext) {
+					continue
+				}
+				return event, callResult
 			}
 		}
 	} else if update.CallbackQuery != nil {
@@ -125,7 +133,11 @@ func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (event events.Event, 
 		event = callbackEvent
 		for _, handler := range b.CallbackHandlers {
 			if handler.Matches(callbackEvent) {
-				return event, handler.Call(callbackEvent)
+				callResult := handler.Call(callbackEvent)
+				if callResult != nil && errors.Is(callResult, events.PropagateNext) {
+					continue
+				}
+				return event, callResult
 			}
 		}
 		if b.UnknownCallbackFunc != nil {
