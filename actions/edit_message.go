@@ -54,6 +54,18 @@ func (a *EditMessageAction) WithText(text string) *EditMessageAction {
 	return a
 }
 
+func (a *EditMessageAction) WithMarkdownText(text string) *EditMessageAction {
+	a.text = &text
+	a.asMarkdown = true
+	return a
+}
+
+func (a *EditMessageAction) WithHTMLText(text string) *EditMessageAction {
+	a.text = &text
+	a.asHTML = true
+	return a
+}
+
 func (a *EditMessageAction) WithMarkdown() *EditMessageAction {
 	a.asMarkdown = true
 	return a

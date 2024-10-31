@@ -35,6 +35,18 @@ func (a *SendMessageAction) WithText(text string) *SendMessageAction {
 	return a
 }
 
+func (a *SendMessageAction) WithMarkdownText(text string) *SendMessageAction {
+	a.text = text
+	a.asMarkdown = true
+	return a
+}
+
+func (a *SendMessageAction) WithHTMLText(text string) *SendMessageAction {
+	a.text = text
+	a.asHTML = true
+	return a
+}
+
 func (a *SendMessageAction) WithMarkdown() *SendMessageAction {
 	a.asMarkdown = true
 	return a
