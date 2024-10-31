@@ -10,6 +10,12 @@ import (
 	"log"
 )
 
+type CtxKey string
+
+const (
+	CtxKeyBot = CtxKey("bot")
+)
+
 type TgBot struct {
 	Bot         *tgbotapi.BotAPI
 	StateGetter handlers.StateGettable
@@ -65,7 +71,7 @@ func (b *TgBot) updateGoroutine(updatesChan tgbotapi.UpdatesChannel) {
 
 func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (event events.Event, err error) {
 	ctx := context.Background()
-	ctx = context.WithValue(ctx, "bot", b.Bot)
+	ctx = context.WithValue(ctx, CtxKeyBot, b.Bot)
 
 	defer func() {
 		if r := recover(); r != nil {
