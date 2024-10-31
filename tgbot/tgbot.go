@@ -84,8 +84,12 @@ func (b *TgBot) innerHandleUpdate(update *tgbotapi.Update) (event events.Event, 
 
 	if update.Message != nil {
 		state := ""
+		var stateErr error
 		if b.StateGetter != nil {
-			state = b.StateGetter.GetState(cmn.ChatId)
+			state, stateErr = b.StateGetter.GetState(cmn.ChatId, cmn.Context)
+			if stateErr != nil {
+				return nil, stateErr
+			}
 		}
 		newMsgEvent := events.NewNewMessageEvent(cmn, state)
 		event = newMsgEvent
