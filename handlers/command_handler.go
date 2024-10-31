@@ -49,3 +49,20 @@ func (h *HandlerCommand) Call(e events.Event) error {
 
 	return h.Func(event, event.Context)
 }
+
+func NewCommand(command string, f CommandFunc) *HandlerCommand {
+	return &HandlerCommand{
+		Command: command,
+		Func:    f,
+	}
+}
+
+func (h *HandlerCommand) WithArgumentsCheck(f func([]string) bool) *HandlerCommand {
+	h.ArgumentsCheck = f
+	return h
+}
+
+func (h *HandlerCommand) WithNeedsBotMentionInGroup() *HandlerCommand {
+	h.NeedsBotMentionInGroup = true
+	return h
+}

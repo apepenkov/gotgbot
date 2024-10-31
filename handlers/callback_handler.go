@@ -41,3 +41,15 @@ func (h *HandlerCallback) Call(e events.Event) error {
 
 	return h.Func(event, event.Context)
 }
+
+func NewCallback(cbData cb_data.CallbackData, f CallbackFunc) *HandlerCallback {
+	return &HandlerCallback{
+		CallbackData: cbData,
+		Func:         f,
+	}
+}
+
+func (h *HandlerCallback) WithArgumentsCheck(f func([]string) bool) *HandlerCallback {
+	h.ArgumentsCheck = f
+	return h
+}

@@ -60,3 +60,42 @@ func (h *HandlerNewMessage) Call(e events.Event) error {
 
 	return h.Func(event, event.Context)
 }
+
+func NewMessageByPattern(pattern regexp.Regexp, fn NewMessageFunc) *HandlerNewMessage {
+	return &HandlerNewMessage{
+		Pattern:   pattern,
+		ByPattern: true,
+		Func:      fn,
+	}
+}
+
+func NewMessageByState(state string, fn NewMessageFunc) *HandlerNewMessage {
+	return &HandlerNewMessage{
+		State:   state,
+		ByState: true,
+		Func:    fn,
+	}
+}
+
+func NewMessageByStringPrefix(prefix string, fn NewMessageFunc) *HandlerNewMessage {
+	return &HandlerNewMessage{
+		StringPrefix:   prefix,
+		ByStringPrefix: true,
+		Func:           fn,
+	}
+}
+
+func NewMessageByFullStringMatch(match string, fn NewMessageFunc) *HandlerNewMessage {
+	return &HandlerNewMessage{
+		FullStringMatch:   match,
+		ByFullStringMatch: true,
+		Func:              fn,
+	}
+}
+
+func NewMessageAll(fn NewMessageFunc) *HandlerNewMessage {
+	return &HandlerNewMessage{
+		All:  true,
+		Func: fn,
+	}
+}
