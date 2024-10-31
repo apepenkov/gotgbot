@@ -8,7 +8,7 @@ import (
 
 type CommandFunc func(e *events.CommandEvent, ctx context.Context) error
 
-type CommandHandler struct {
+type HandlerCommand struct {
 	Command                string
 	NeedsBotMentionInGroup bool
 	ArgumentsCheck         func([]string) bool
@@ -16,7 +16,7 @@ type CommandHandler struct {
 	Func CommandFunc
 }
 
-func (h *CommandHandler) Matches(e events.Event) bool {
+func (h *HandlerCommand) Matches(e events.Event) bool {
 	event, ok := e.(*events.CommandEvent)
 	if !ok {
 		return false
@@ -41,7 +41,7 @@ func (h *CommandHandler) Matches(e events.Event) bool {
 	return true
 }
 
-func (h *CommandHandler) Call(e events.Event) error {
+func (h *HandlerCommand) Call(e events.Event) error {
 	event, ok := e.(*events.CommandEvent)
 	if !ok {
 		return fmt.Errorf("expected *events.CommandEvent, got %T", e)

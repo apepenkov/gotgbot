@@ -14,13 +14,13 @@ type TgBot struct {
 	Bot         *tgbotapi.BotAPI
 	StateGetter handlers.StateGettable
 
-	CommandHandlers    []handlers.CommandHandler
+	CommandHandlers    []handlers.HandlerCommand
 	UnknownCommandFunc handlers.CommandFunc
 
-	MessageHandlers    []handlers.NewMessageHandler
+	MessageHandlers    []handlers.HandlerNewMessage
 	UnknownMessageFunc handlers.NewMessageFunc
 
-	CallbackHandlers    []handlers.CallbackHandler
+	CallbackHandlers    []handlers.HandlerCallback
 	UnknownCallbackFunc handlers.CallbackFunc
 
 	DefAnErrorOccurredFunc func(event events.Event, err error) error
@@ -38,9 +38,9 @@ func NewTgBot(token string, stateGetter handlers.StateGettable) (*TgBot, error) 
 		Bot:         bot,
 		StateGetter: stateGetter,
 
-		CommandHandlers:  make([]handlers.CommandHandler, 0),
-		MessageHandlers:  make([]handlers.NewMessageHandler, 0),
-		CallbackHandlers: make([]handlers.CallbackHandler, 0),
+		CommandHandlers:  make([]handlers.HandlerCommand, 0),
+		MessageHandlers:  make([]handlers.HandlerNewMessage, 0),
+		CallbackHandlers: make([]handlers.HandlerCallback, 0),
 
 		updateGoroutines: 5,
 	}, nil
@@ -143,15 +143,15 @@ func (b *TgBot) Stop() {
 	close(b.cancelUpdateChan)
 }
 
-func (b *TgBot) RegisterCommandHandler(handler handlers.CommandHandler) {
+func (b *TgBot) RegisterCommandHandler(handler handlers.HandlerCommand) {
 	b.CommandHandlers = append(b.CommandHandlers, handler)
 }
 
-func (b *TgBot) RegisterMessageHandler(handler handlers.NewMessageHandler) {
+func (b *TgBot) RegisterMessageHandler(handler handlers.HandlerNewMessage) {
 	b.MessageHandlers = append(b.MessageHandlers, handler)
 }
 
-func (b *TgBot) RegisterCallbackHandler(handler handlers.CallbackHandler) {
+func (b *TgBot) RegisterCallbackHandler(handler handlers.HandlerCallback) {
 	b.CallbackHandlers = append(b.CallbackHandlers, handler)
 }
 

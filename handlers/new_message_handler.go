@@ -9,7 +9,7 @@ import (
 
 type NewMessageFunc func(e *events.NewMessageEvent, ctx context.Context) error
 
-type NewMessageHandler struct {
+type HandlerNewMessage struct {
 	Pattern   regexp.Regexp
 	ByPattern bool
 
@@ -27,7 +27,7 @@ type NewMessageHandler struct {
 	Func NewMessageFunc
 }
 
-func (h *NewMessageHandler) Matches(e events.Event) bool {
+func (h *HandlerNewMessage) Matches(e events.Event) bool {
 	event, ok := e.(*events.NewMessageEvent)
 	if !ok {
 		return false
@@ -52,7 +52,7 @@ func (h *NewMessageHandler) Matches(e events.Event) bool {
 	return false
 }
 
-func (h *NewMessageHandler) Call(e events.Event) error {
+func (h *HandlerNewMessage) Call(e events.Event) error {
 	event, ok := e.(*events.NewMessageEvent)
 	if !ok {
 		return fmt.Errorf("expected *events.NewMessageEvent, got %T", e)

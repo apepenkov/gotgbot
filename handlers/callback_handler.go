@@ -9,14 +9,14 @@ import (
 
 type CallbackFunc func(e *events.CallbackEvent, ctx context.Context) error
 
-type CallbackHandler struct {
+type HandlerCallback struct {
 	CallbackData   cb_data.CallbackData
 	ArgumentsCheck func([]string) bool
 
 	Func CallbackFunc
 }
 
-func (h *CallbackHandler) Matches(e events.Event) bool {
+func (h *HandlerCallback) Matches(e events.Event) bool {
 	event, ok := e.(*events.CallbackEvent)
 	if !ok {
 		return false
@@ -33,7 +33,7 @@ func (h *CallbackHandler) Matches(e events.Event) bool {
 	return true
 }
 
-func (h *CallbackHandler) Call(e events.Event) error {
+func (h *HandlerCallback) Call(e events.Event) error {
 	event, ok := e.(*events.CallbackEvent)
 	if !ok {
 		return fmt.Errorf("expected *events.CallbackEvent, got %T", e)
